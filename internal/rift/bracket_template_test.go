@@ -148,13 +148,15 @@ var chuninExamsBracketTemplate = rift.BracketTemplate{
 var errAPINotFound = errors.New("not found")
 
 type stubBracketTemplateAPIClient struct {
-	template rift.BracketTemplate
-	err      error
+	template        rift.BracketTemplate
+	availableStages []string
+	err             error
 }
 
 func newStubBracketTemplateAPIClient() *stubBracketTemplateAPIClient {
 	return &stubBracketTemplateAPIClient{
-		template: chuninExamsBracketTemplate,
+		template:        chuninExamsBracketTemplate,
+		availableStages: []string{"1", "2"},
 	}
 }
 
@@ -170,4 +172,13 @@ func (api *stubBracketTemplateAPIClient) GetTemplateByStageID(
 		return rift.BracketTemplate{}, api.err
 	}
 	return api.template, nil
+}
+
+func (api *stubBracketTemplateAPIClient) GetAvailableStageTemplate(
+	_ context.Context,
+) ([]string, error) {
+	if api.err != nil {
+		return nil, api.err
+	}
+	return api.availableStages, nil
 }

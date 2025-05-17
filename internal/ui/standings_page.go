@@ -3,6 +3,7 @@ package ui
 import (
 	"context"
 	"log/slog"
+	"slices"
 
 	"github.com/charmbracelet/bubbles/help"
 	"github.com/charmbracelet/bubbles/key"
@@ -636,6 +637,16 @@ func (p *standingsPage) fetchCurrentSeasonSplits() tea.Cmd {
 		}
 		return fetchedCurrentSeasonSplitsMessage{splits}
 	}
+}
+
+func (p *standingsPage) isBracketStageTemplateAvailable(stageID string) bool {
+	availableStageIDs, err := p.bracketTemplateLoader.ListAvailableStageIDs(context.Background())
+	if err != nil {
+		// Ignore err for now
+		return false
+	}
+
+	return slices.Contains(availableStageIDs, stageID)
 }
 
 func (p *standingsPage) loadBracketStageTemplate(stageID string) tea.Cmd {
