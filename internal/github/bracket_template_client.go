@@ -30,6 +30,23 @@ func NewBracketTemplateClient(httpClient *http.Client) *BracketTemplateClient {
 	}
 }
 
+func (c *BracketTemplateClient) GetAvailableStageTemplate(ctx context.Context) ([]string, error) {
+	var (
+		bracketTypeByStageID map[string]string
+	)
+	bracketTypeByStageID, err := c.getBracketTemplateMapper(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	keys := make([]string, 0, len(bracketTypeByStageID))
+	for k := range bracketTypeByStageID {
+		keys = append(keys, k)
+	}
+
+	return keys, nil
+}
+
 // GetTemplateByStageID fetches the bracket template associated with the given stage id.
 //
 // An error is returned if no bracket template is associated with the stage id or
